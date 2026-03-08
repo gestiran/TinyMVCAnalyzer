@@ -39,9 +39,25 @@ namespace TinyMVCAnalyzer.Dependencies {
             }
             
             IEnumerable<MethodDeclarationSyntax> methods = classDeclaration.Members.OfType<MethodDeclarationSyntax>();
-            MethodDeclarationSyntax methodDeclaration = methods.FirstOrDefault(syntax => syntax.Identifier.Text == "ApplyResolving");
             
-            if (methodDeclaration == null) {
+            bool isHave = false;
+            MethodDeclarationSyntax methodDeclaration = null;
+            
+            foreach (MethodDeclarationSyntax method in methods) {
+                if (method.Identifier.Text.Equals("ApplyResolving") == false) {
+                    continue;
+                }
+                
+                if (method.ParameterList.Parameters.Count > 0) {
+                    continue;
+                }
+                
+                methodDeclaration = method;
+                isHave = true;
+                break;
+            }
+            
+            if (isHave == false) {
                 return;
             }
             
