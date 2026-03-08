@@ -6,7 +6,7 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
 
 namespace TinyMVCAnalyzer.Dependencies {
-    public abstract class InterfaceAnalyser : DiagnosticAnalyzer {
+    public abstract class InterfaceRequireAnalyser : DiagnosticAnalyzer {
         protected abstract DiagnosticDescriptor _rule { get; }
         protected abstract string _methodName { get; }
         protected abstract string _interfaceName { get; }
