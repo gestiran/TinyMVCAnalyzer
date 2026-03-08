@@ -14,7 +14,7 @@ using Document = Microsoft.CodeAnalysis.Document;
 namespace TinyMVCAnalyzer.Dependencies {
     [ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(ApplyResolvingCodeFixProvider)), Shared]
     public sealed class ApplyResolvingCodeFixProvider : CodeFixProvider {
-        public override ImmutableArray<string> FixableDiagnosticIds => ImmutableArray.Create(ApplyResolvingAnalyzer.DIAGNOSTIC_ID);
+        public override ImmutableArray<string> FixableDiagnosticIds => ImmutableArray.Create(Labels.ID_APPLY_RESOLVING);
         
         private const string _TITLE = "Add IApplyResolving interface";
         private const string _KEY = nameof(ApplyResolvingCodeFixProvider);
