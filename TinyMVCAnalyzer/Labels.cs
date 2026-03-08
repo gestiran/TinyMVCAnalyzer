@@ -4,5 +4,6 @@ namespace TinyMVCAnalyzer {
         
         public const string ID_INIT = "TINYMVC001";
         public const string ID_APPLY_RESOLVING = "TINYMVC002";
+        public const string ID_BEGIN_PLAY = "TINYMVC003";
     }
 }

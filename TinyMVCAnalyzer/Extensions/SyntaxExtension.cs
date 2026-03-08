@@ -64,7 +64,7 @@ namespace TinyMVCAnalyzer.Extensions {
             
             placeId = -1;
             
-            for (int targetId = 0; targetId < targets.Length; targetId++) {
+            for (int targetId = targets.Length - 1; targetId >= 0; targetId--) {
                 string target = targets[targetId];
                 
                 for (int typeId = 0; typeId < typeNames.Length; typeId++) {
