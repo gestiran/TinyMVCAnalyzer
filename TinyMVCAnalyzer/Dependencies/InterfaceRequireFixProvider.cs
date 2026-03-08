@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CodeActions;
 using Microsoft.CodeAnalysis.CodeFixes;
-using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Text;
+using TinyMVCAnalyzer.Extensions;
 
 namespace TinyMVCAnalyzer.Dependencies {
     public abstract class InterfaceRequireFixProvider : CodeFixProvider {
@@ -16,7 +16,6 @@ namespace TinyMVCAnalyzer.Dependencies {
         protected abstract string _title { get; }
         protected abstract string _key { get; }
         protected abstract string _namespace { get; }
-        protected abstract string _interfaceName { get; }
         
         public override FixAllProvider GetFixAllProvider() => WellKnownFixAllProviders.BatchFixer;
         
@@ -52,37 +51,21 @@ namespace TinyMVCAnalyzer.Dependencies {
                 return document;
             }
             
-            bool hasUsing = false;
+            SemanticModel semantic = await document.GetSemanticModelAsync(cancellation);
             
-            foreach (UsingDirectiveSyntax usingDirective in root.Usings) {
-                if (usingDirective.Name.ToString() == _namespace) {
-                    hasUsing = true;
-                    break;
-                }
+            if (semantic == null) {
+                return document;
             }
             
-            TypeSyntax interfaceType = SyntaxFactory.ParseTypeName(_interfaceName);
-            SimpleBaseTypeSyntax baseType = SyntaxFactory.SimpleBaseType(interfaceType);
+            CompilationUnitSyntax newRoot = root.ReplaceNode(declaration, ApplyFix(declaration, semantic));
             
-            ClassDeclarationSyntax newClassDeclaration;
-            
-            if (declaration.BaseList == null) {
-                BaseListSyntax baseList = SyntaxFactory.BaseList(SyntaxFactory.SingletonSeparatedList<BaseTypeSyntax>(baseType));
-                newClassDeclaration = declaration.WithBaseList(baseList);
-            } else {
-                newClassDeclaration = declaration.AddBaseListTypes(baseType);
-            }
-            
-            CompilationUnitSyntax newRoot = root.ReplaceNode(declaration, newClassDeclaration);
-            
-            if (!hasUsing) {
-                NameSyntax nameSyntax = SyntaxFactory.ParseName(_namespace);
-                UsingDirectiveSyntax usingDirective = SyntaxFactory.UsingDirective(nameSyntax).WithTrailingTrivia(SyntaxFactory.ElasticCarriageReturnLineFeed);
-                
-                newRoot = newRoot.AddUsings(usingDirective);
+            if (root.IsHaveUsing(_namespace) == false) {
+                newRoot = newRoot.AddUsing(_namespace);
             }
             
             return document.WithSyntaxRoot(newRoot);
         }
+        
+        protected abstract ClassDeclarationSyntax ApplyFix(ClassDeclarationSyntax declaration, SemanticModel semantic);
     }
 }
