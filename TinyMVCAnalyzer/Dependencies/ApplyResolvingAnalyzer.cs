@@ -1,4 +1,5 @@
-﻿using System.Collections.Immutable;
+﻿using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
@@ -16,8 +17,11 @@ namespace TinyMVCAnalyzer.Dependencies {
         private const string _MESSAGE_FORMAT = "Class '{0}' has ApplyResolving method but does not implement IApplyResolving";
         private const string _CATEGORY = "Tiny MVC";
         
-        private static readonly DiagnosticDescriptor _rule = new DiagnosticDescriptor(
-            DIAGNOSTIC_ID, _TITLE, _MESSAGE_FORMAT, _CATEGORY, DiagnosticSeverity.Warning, isEnabledByDefault: true);
+        private static readonly DiagnosticDescriptor _rule;
+        
+        static ApplyResolvingAnalyzer() {
+            _rule = new DiagnosticDescriptor(DIAGNOSTIC_ID, _TITLE, _MESSAGE_FORMAT, _CATEGORY, DiagnosticSeverity.Warning, isEnabledByDefault: true);
+        }
         
         public override void Initialize(AnalysisContext context) {
             context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);
@@ -34,31 +38,28 @@ namespace TinyMVCAnalyzer.Dependencies {
                 return;
             }
             
-            MethodDeclarationSyntax methodDeclaration = classDeclaration.Members.OfType<MethodDeclarationSyntax>().FirstOrDefault(m => m.Identifier.Text == "ApplyResolving");
+            IEnumerable<MethodDeclarationSyntax> methods = classDeclaration.Members.OfType<MethodDeclarationSyntax>();
+            MethodDeclarationSyntax methodDeclaration = methods.FirstOrDefault(syntax => syntax.Identifier.Text == "ApplyResolving");
             
             if (methodDeclaration == null) {
                 return;
             }
             
-            bool implementsInterface = false;
+            bool isImplementInterface = false;
             
-            foreach (INamedTypeSymbol @interface in symbol.AllInterfaces) {
-                if (@interface.Name == "IApplyResolving") {
-                    implementsInterface = true;
+            foreach (INamedTypeSymbol current in symbol.AllInterfaces) {
+                if (current.Name == "IApplyResolving") {
+                    isImplementInterface = true;
                     break;
                 }
             }
             
-            if (!implementsInterface) {
+            if (!isImplementInterface) {
                 Diagnostic classDiagnostic = Diagnostic.Create(_rule, classDeclaration.Identifier.GetLocation(), symbol.Name);
                 Diagnostic methodDiagnostic = Diagnostic.Create(_rule, methodDeclaration.Identifier.GetLocation(), symbol.Name);
                 
                 context.ReportDiagnostic(classDiagnostic);
                 context.ReportDiagnostic(methodDiagnostic);
-                
-                
-                Diagnostic diagnostic = Diagnostic.Create(_rule, classDeclaration.Identifier.GetLocation(), symbol.Name);
-                context.ReportDiagnostic(diagnostic);
             }
         }
     }

@@ -16,6 +16,9 @@ namespace TinyMVCAnalyzer.Dependencies {
     public sealed class ApplyResolvingCodeFixProvider : CodeFixProvider {
         public override ImmutableArray<string> FixableDiagnosticIds => ImmutableArray.Create(ApplyResolvingAnalyzer.DIAGNOSTIC_ID);
         
+        private const string _TITLE = "Add IApplyResolving interface";
+        private const string _KEY = nameof(ApplyResolvingCodeFixProvider);
+        
         public override FixAllProvider GetFixAllProvider() => WellKnownFixAllProviders.BatchFixer;
         
         public override async Task RegisterCodeFixesAsync(CodeFixContext context) {
@@ -35,13 +38,16 @@ namespace TinyMVCAnalyzer.Dependencies {
             
             ClassDeclarationSyntax declaration = parent.AncestorsAndSelf().OfType<ClassDeclarationSyntax>().FirstOrDefault();
             
-            context.RegisterCodeFix(
-                CodeAction.Create(title: "Add IApplyResolving interface", createChangedDocument: c => AddInterfaceAsync(context.Document, declaration, c),
-                                  equivalenceKey: nameof(ApplyResolvingCodeFixProvider)), diagnostic);
+            if (declaration == null) {
+                return;
+            }
+            
+            CodeAction codeAction = CodeAction.Create(_TITLE, cancellation => AddInterfaceAsync(context.Document, declaration, cancellation), _KEY);
+            context.RegisterCodeFix(codeAction, diagnostic);
         }
         
-        private async Task<Document> AddInterfaceAsync(Document document, ClassDeclarationSyntax classDeclaration, CancellationToken cancellationToken) {
-            CompilationUnitSyntax root = await document.GetSyntaxRootAsync(cancellationToken) as CompilationUnitSyntax;
+        private async Task<Document> AddInterfaceAsync(Document document, ClassDeclarationSyntax declaration, CancellationToken cancellation) {
+            CompilationUnitSyntax root = await document.GetSyntaxRootAsync(cancellation) as CompilationUnitSyntax;
             
             if (root == null) {
                 return document;
@@ -62,14 +68,14 @@ namespace TinyMVCAnalyzer.Dependencies {
             
             ClassDeclarationSyntax newClassDeclaration;
             
-            if (classDeclaration.BaseList == null) {
+            if (declaration.BaseList == null) {
                 BaseListSyntax baseList = SyntaxFactory.BaseList(SyntaxFactory.SingletonSeparatedList<BaseTypeSyntax>(baseType));
-                newClassDeclaration = classDeclaration.WithBaseList(baseList);
+                newClassDeclaration = declaration.WithBaseList(baseList);
             } else {
-                newClassDeclaration = classDeclaration.AddBaseListTypes(baseType);
+                newClassDeclaration = declaration.AddBaseListTypes(baseType);
             }
             
-            CompilationUnitSyntax newRoot = root.ReplaceNode(classDeclaration, newClassDeclaration);
+            CompilationUnitSyntax newRoot = root.ReplaceNode(declaration, newClassDeclaration);
             
             if (!hasUsing) {
                 NameSyntax nameSyntax = SyntaxFactory.ParseName(targetNamespace);
