@@ -24,11 +24,19 @@ namespace TinyMVCAnalyzer.Dependencies {
         }
         
         protected override ClassDeclarationSyntax ApplyFix(ClassDeclarationSyntax declaration, SemanticModel semantic) {
-            if (declaration.IsHaveParentClass(semantic)) {
-                return declaration.InsertInterface(_interfaceName, 1);   
+            ClassDeclarationSyntax newClassDeclaration;
+            
+            if (declaration.BaseList == null) {
+                newClassDeclaration = declaration.AddInterface(_interfaceName);
+            } else if (declaration.BaseList.Types.TryFindAnyPlace(out int placeId, "IController")) {
+                newClassDeclaration = declaration.InsertInterface(_interfaceName, placeId + 1);
+            } else if (declaration.IsHaveParentClass(semantic)) {
+                newClassDeclaration = declaration.InsertInterface(_interfaceName, 1);
+            } else {
+                newClassDeclaration = declaration.InsertInterface(_interfaceName, 0);
             }
             
-            return declaration.InsertInterface(_interfaceName, 0);
+            return newClassDeclaration;
         }
     }
 }

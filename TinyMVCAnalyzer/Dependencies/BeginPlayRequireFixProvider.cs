@@ -28,7 +28,7 @@ namespace TinyMVCAnalyzer.Dependencies {
             
             if (declaration.BaseList == null) {
                 newClassDeclaration = declaration.AddInterface(_interfaceName);
-            } else if (declaration.BaseList.Types.TryFindAnyPlace(out int placeId, "IInit", "IApplyResolving")) {
+            } else if (declaration.BaseList.Types.TryFindAnyPlace(out int placeId, "IController", "IInit", "IApplyResolving")) {
                 newClassDeclaration = declaration.InsertInterface(_interfaceName, placeId + 1);
             } else if (declaration.IsHaveParentClass(semantic)) {
                 newClassDeclaration = declaration.InsertInterface(_interfaceName, 1);
