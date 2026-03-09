@@ -1,4 +1,3 @@
-using System.Collections.Immutable;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -7,12 +6,10 @@ using Microsoft.CodeAnalysis.CodeActions;
 using Microsoft.CodeAnalysis.CodeFixes;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Text;
-using TinyMVCAnalyzer.Extensions;
+using TinyAnalyzer.Extensions;
 
-namespace TinyMVCAnalyzer {
+namespace TinyAnalyzer {
     public abstract class InterfaceRequireFixProvider : CodeFixProvider {
-        public override ImmutableArray<string> FixableDiagnosticIds => ImmutableArray.Create(Labels.ID_APPLY_RESOLVING);
-        
         protected abstract string _title { get; }
         protected abstract string _key { get; }
         protected abstract string _namespace { get; }

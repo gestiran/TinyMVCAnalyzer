@@ -1,6 +1,7 @@
 ﻿using System.Collections.Immutable;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Diagnostics;
+using TinyAnalyzer;
 
 namespace TinyMVCAnalyzer.Dependencies {
     [DiagnosticAnalyzer(LanguageNames.CSharp)]

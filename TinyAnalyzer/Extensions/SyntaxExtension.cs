@@ -4,7 +4,7 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
-namespace TinyMVCAnalyzer.Extensions {
+namespace TinyAnalyzer.Extensions {
     public static class SyntaxExtension {
         [Pure]
         public static bool IsHaveUsing(this CompilationUnitSyntax syntax, string targetNamespace) {

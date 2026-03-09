@@ -3,7 +3,8 @@ using System.Composition;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CodeFixes;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
-using TinyMVCAnalyzer.Extensions;
+using TinyAnalyzer;
+using TinyAnalyzer.Extensions;
 
 namespace TinyMVCAnalyzer.Dependencies {
     [ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(ApplyResolvingRequireFixProvider)), Shared]

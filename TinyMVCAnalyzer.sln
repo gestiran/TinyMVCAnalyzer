@@ -2,6 +2,10 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TinyMVCAnalyzer", "TinyMVCAnalyzer\TinyMVCAnalyzer.csproj", "{DCA2DB51-0A35-497B-983F-3F40CBF01E4E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TinyReactiveAnalyzer", "TinyReactiveAnalyzer\TinyReactiveAnalyzer.csproj", "{9CD3206B-5480-4A37-8872-EB1DFCB70F7D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TinyAnalyzer", "TinyAnalyzer\TinyAnalyzer.csproj", "{0DA50567-5788-4A95-A315-31C340149531}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -12,5 +16,13 @@ Global
 		{DCA2DB51-0A35-497B-983F-3F40CBF01E4E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DCA2DB51-0A35-497B-983F-3F40CBF01E4E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DCA2DB51-0A35-497B-983F-3F40CBF01E4E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9CD3206B-5480-4A37-8872-EB1DFCB70F7D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9CD3206B-5480-4A37-8872-EB1DFCB70F7D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9CD3206B-5480-4A37-8872-EB1DFCB70F7D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9CD3206B-5480-4A37-8872-EB1DFCB70F7D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0DA50567-5788-4A95-A315-31C340149531}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0DA50567-5788-4A95-A315-31C340149531}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0DA50567-5788-4A95-A315-31C340149531}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0DA50567-5788-4A95-A315-31C340149531}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

@@ -1,0 +1,23 @@
+using System.Collections.Immutable;
+using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.Diagnostics;
+using TinyAnalyzer;
+
+namespace TinyReactiveAnalyzer {
+    [DiagnosticAnalyzer(LanguageNames.CSharp)]
+    public sealed class UnloadRequireAnalyzer : InterfaceRequireAnalyser {
+        public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(_rule);
+        protected override string _methodName { get; }
+        protected override string _interfaceName { get; }
+        protected override DiagnosticDescriptor _rule { get; }
+        
+        private const string _TITLE = "Missing IUnload interface";
+        private const string _MESSAGE_FORMAT = "Class '{0}' has Unload method but does not implement IUnload";
+        
+        public UnloadRequireAnalyzer() {
+            _methodName = "Unload";
+            _interfaceName = "IUnload";
+            _rule = new DiagnosticDescriptor(Labels.ID_UNLOAD, _TITLE, _MESSAGE_FORMAT, Labels.CATEGORY, DiagnosticSeverity.Warning, true);
+        }
+    }
+}

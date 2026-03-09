@@ -6,10 +6,10 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using TinyAnalyzer;
 using TinyAnalyzer.Extensions;
 
-namespace TinyMVCAnalyzer.Loop {
-    [ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(LateTickRequireFixProvider)), Shared]
-    public sealed class LateTickRequireFixProvider : InterfaceRequireFixProvider {
-        public override ImmutableArray<string> FixableDiagnosticIds => ImmutableArray.Create(Labels.ID_LATE_TICK);
+namespace TinyReactiveAnalyzer {
+    [ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(UnloadRequireFixProvider)), Shared]
+    public sealed class UnloadRequireFixProvider : InterfaceRequireFixProvider {
+        public override ImmutableArray<string> FixableDiagnosticIds => ImmutableArray.Create(Labels.ID_UNLOAD);
         
         protected override string _title { get; }
         protected override string _key { get; }
@@ -17,11 +17,11 @@ namespace TinyMVCAnalyzer.Loop {
         
         private readonly string _interfaceName;
         
-        public LateTickRequireFixProvider() {
-            _title = "Add ILateTick interface";
-            _key = nameof(LateTickRequireFixProvider);
-            _namespace = "TinyMVC.Loop";
-            _interfaceName = "ILateTick";
+        public UnloadRequireFixProvider() {
+            _title = "Add IUnload interface";
+            _key = nameof(UnloadRequireFixProvider);
+            _namespace = "TinyReactive";
+            _interfaceName = "IUnload";
         }
         
         protected override ClassDeclarationSyntax ApplyFix(ClassDeclarationSyntax declaration, SemanticModel semantic) {
@@ -29,7 +29,7 @@ namespace TinyMVCAnalyzer.Loop {
             
             if (declaration.BaseList == null) {
                 newClassDeclaration = declaration.AddInterface(_interfaceName);
-            } else if (declaration.BaseList.Types.TryFindAnyPlace(out int placeId, "IController", "IInit", "IApplyResolving", "IFixedTick", "ITick")) {
+            } else if (declaration.BaseList.Types.TryFindAnyPlace(out int placeId, "IController", "IInit", "IApplyResolving", "IFixedTick", "ITick", "ILateTick")) {
                 newClassDeclaration = declaration.InsertInterface(_interfaceName, placeId + 1);
             } else if (declaration.IsHaveParentClass(semantic)) {
                 newClassDeclaration = declaration.InsertInterface(_interfaceName, 1);

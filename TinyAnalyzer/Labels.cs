@@ -1,4 +1,4 @@
-namespace TinyMVCAnalyzer {
+namespace TinyAnalyzer {
     public static class Labels {
         public const string CATEGORY = "TinyMVC";
         
@@ -8,5 +8,6 @@ namespace TinyMVCAnalyzer {
         public const string ID_FIXED_TICK = "TINYMVC004";
         public const string ID_TICK = "TINYMVC005";
         public const string ID_LATE_TICK = "TINYMVC006";
+        public const string ID_UNLOAD = "TINYMVC007";
     }
 }
