@@ -2,7 +2,7 @@ using System.Collections.Immutable;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Diagnostics;
 
-namespace TinyMVCAnalyzer.Dependencies {
+namespace TinyMVCAnalyzer.Loop {
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
     public sealed class BeginPlayRequireAnalyzer : InterfaceRequireAnalyser {
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(_rule);

@@ -9,7 +9,7 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Text;
 using TinyMVCAnalyzer.Extensions;
 
-namespace TinyMVCAnalyzer.Dependencies {
+namespace TinyMVCAnalyzer {
     public abstract class InterfaceRequireFixProvider : CodeFixProvider {
         public override ImmutableArray<string> FixableDiagnosticIds => ImmutableArray.Create(Labels.ID_APPLY_RESOLVING);
         
