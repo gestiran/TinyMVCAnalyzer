@@ -1,9 +1,8 @@
-using System.Collections.Generic;
-using System.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
+using TinyAnalyzer.Extensions;
 
 namespace TinyAnalyzer {
     public abstract class InterfaceRequireAnalyser : DiagnosticAnalyzer {
@@ -26,39 +25,11 @@ namespace TinyAnalyzer {
                 return;
             }
             
-            IEnumerable<MethodDeclarationSyntax> methods = classDeclaration.Members.OfType<MethodDeclarationSyntax>();
-            
-            bool isHave = false;
-            MethodDeclarationSyntax methodDeclaration = null;
-            
-            foreach (MethodDeclarationSyntax method in methods) {
-                if (method.Identifier.Text.Equals(_methodName) == false) {
-                    continue;
-                }
-                
-                if (method.ParameterList.Parameters.Count > 0) {
-                    continue;
-                }
-                
-                methodDeclaration = method;
-                isHave = true;
-                break;
-            }
-            
-            if (isHave == false) {
+            if (classDeclaration.TryFindMethod(_methodName, out MethodDeclarationSyntax methodDeclaration) == false) {
                 return;
             }
             
-            bool isImplementInterface = false;
-            
-            foreach (INamedTypeSymbol current in symbol.AllInterfaces) {
-                if (current.Name == _interfaceName) {
-                    isImplementInterface = true;
-                    break;
-                }
-            }
-            
-            if (!isImplementInterface) {
+            if (symbol.IsHaveInterface(_interfaceName) == false) {
                 Diagnostic classDiagnostic = Diagnostic.Create(_rule, classDeclaration.Identifier.GetLocation(), symbol.Name);
                 Diagnostic methodDiagnostic = Diagnostic.Create(_rule, methodDeclaration.Identifier.GetLocation(), symbol.Name);
                 

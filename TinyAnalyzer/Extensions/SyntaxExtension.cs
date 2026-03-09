@@ -1,11 +1,34 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics.Contracts;
+using System.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace TinyAnalyzer.Extensions {
     public static class SyntaxExtension {
+        [Pure]
+        public static bool TryFindMethod(this ClassDeclarationSyntax declaration, string name, out MethodDeclarationSyntax method) {
+            IEnumerable<MethodDeclarationSyntax> methods = declaration.Members.OfType<MethodDeclarationSyntax>();
+            
+            foreach (MethodDeclarationSyntax other in methods) {
+                if (other.Identifier.Text != name) {
+                    continue;
+                }
+                
+                if (other.ParameterList.Parameters.Count > 0) {
+                    continue;
+                }
+                
+                method = other;
+                return true;
+            }
+            
+            method = null;
+            return false;
+        }
+        
         [Pure]
         public static bool IsHaveUsing(this CompilationUnitSyntax syntax, string targetNamespace) {
             foreach (UsingDirectiveSyntax usingDirective in syntax.Usings) {
@@ -88,6 +111,17 @@ namespace TinyAnalyzer.Extensions {
             }
             
             return true;
+        }
+        
+        [Pure]
+        public static bool IsHaveInterface<T>(this T symbol, string name) where T : INamedTypeSymbol {
+            foreach (INamedTypeSymbol current in symbol.AllInterfaces) {
+                if (current.Name == name) {
+                    return true;
+                }
+            }
+            
+            return false;
         }
     }
 }
